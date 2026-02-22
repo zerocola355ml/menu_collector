@@ -1,0 +1,253 @@
+/* ── 홈 페이지 전역 ── */
+.home-app {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+}
+
+.home-container {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ── 헤더 ── */
+.home-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.home-header h1 {
+  font-size: 2.4rem;
+  color: #fff;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.home-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.05rem;
+}
+
+/* ── 새 투표 만들기 (큰 버튼) ── */
+.create-room-btn {
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+  color: #667eea;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s, box-shadow 0.15s;
+  margin-bottom: 32px;
+}
+
+.create-room-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+}
+
+.create-room-btn:active {
+  transform: translateY(0);
+}
+
+/* ── 방 생성 폼 ── */
+.create-room-form {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  margin-bottom: 32px;
+}
+
+.create-room-form input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 14px;
+}
+
+.create-room-form input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.create-room-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.create-confirm-btn {
+  flex: 1;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.create-confirm-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+}
+
+.create-confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.create-cancel-btn {
+  padding: 14px 20px;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-cancel-btn:hover {
+  background: #e5e7eb;
+}
+
+/* ── 내 투표방 섹션 ── */
+.my-rooms {
+  margin-bottom: 24px;
+}
+
+.my-rooms-title {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.room-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+}
+
+.room-card-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  cursor: pointer;
+}
+
+.room-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.room-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.room-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room-date {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.room-arrow {
+  font-size: 1.1rem;
+  color: #9ca3af;
+  transition: color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.room-card:hover .room-arrow {
+  color: #667eea;
+  transform: translateX(3px);
+}
+
+.room-remove {
+  background: none;
+  border: none;
+  color: #d1d5db;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 16px 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.room-remove:hover {
+  color: #ef4444;
+}
+
+/* ── 안내 문구 ── */
+.home-info {
+  text-align: center;
+  padding: 20px 16px;
+}
+
+.home-info p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 480px) {
+  .home-app {
+    padding: 24px 14px;
+    align-items: flex-start;
+    padding-top: 60px;
+  }
+
+  .home-header h1 {
+    font-size: 1.9rem;
+  }
+
+  .create-room-btn {
+    padding: 18px;
+    font-size: 1.1rem;
+  }
+}

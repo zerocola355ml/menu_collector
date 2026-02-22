@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "voting-app-983b7"
+  },
+  "targets": {
+    "voting-app-983b7": {
+      "hosting": {
+        "mysite": [
+          "vote-eat"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

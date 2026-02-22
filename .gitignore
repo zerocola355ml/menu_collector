@@ -1,0 +1,8 @@
+# 블로그 글 (GitHub에 올리지 않음)
+blog_post*.md
+
+# Cursor AI 설정 (GitHub에 올리지 않음)
+.cursor/
+
+# OS 파일
+.DS_Store

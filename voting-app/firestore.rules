@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── 그룹 문서 ──
+    match /groups/{groupId} {
+      // 읽기: 누구나 가능
+      allow read: if true;
+
+      // 생성: 이름 필수, 50자 제한
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 50;
+
+      // 수정: lastUsedAt 갱신 등 허용
+      allow update: if true;
+
+      // 삭제: 만료 정리 등 허용
+      allow delete: if true;
+
+      // ── 투표 서브컬렉션 ──
+      match /votes/{voteId} {
+        allow read: if true;
+
+        // 생성: name 50자 제한, voters 100명 제한
+        allow create: if request.resource.data.name is string
+                      && request.resource.data.name.size() <= 50
+                      && request.resource.data.voters.size() <= 100;
+
+        // 수정: voters 100명 제한 유지
+        allow update: if request.resource.data.voters.size() <= 100;
+
+        allow delete: if true;
+      }
+
+      // ── 이미지 서브컬렉션 ──
+      match /menuImages/{imageId} {
+        allow read: if true;
+        allow write: if true;
+      }
+    }
+  }
+}
