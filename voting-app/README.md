@@ -26,10 +26,12 @@
 | 📸 **메뉴 사진 공유** | 메뉴판 사진을 업로드하면 캐러셀로 같이 보기 |
 | 💰 **가격 계산** | 메뉴별 가격 입력 → 항목별 소계 + 총 예상 금액 자동 계산 |
 | 📋 **주문 복사** | 메뉴만 or 사람 포함, 두 가지 형식으로 클립보드 복사 |
-| 🔗 **링크 공유** | 투표방 URL을 한 번에 복사, 카톡으로 공유 |
+| 📤 **공유 팝업** | 링크 복사 + QR 코드 + 네이티브 공유(카카오톡, AirDrop 등) |
 | 🏠 **투표방 관리** | 방 생성/삭제, 내 투표방 목록 (localStorage 기반) |
 | ⏰ **24시간 자동 만료** | 미사용 방은 24시간 후 자동 삭제 |
 | 🔒 **보안** | Firestore 규칙 + 클라이언트 쿨다운으로 악의적 트래픽 방어 |
+| 🌙 **다크모드** | 시스템 설정 자동 감지 + 수동 토글 |
+| ⚙️ **관리자 페이지** | 전체 서비스 / 사진 업로드 on·off 원격 제어 |
 | 📱 **PWA 지원** | 모바일 홈화면에 추가하면 앱처럼 사용 가능 |
 
 ---
@@ -38,7 +40,7 @@
 
 | 분류 | 기술 |
 |---|---|
-| Frontend | React 19, React Router DOM |
+| Frontend | React 19, React Router DOM, qrcode.react |
 | Backend | Firebase Firestore (실시간 DB), Firebase Storage (이미지) |
 | Hosting | Firebase Hosting |
 | SEO | sitemap.xml, robots.txt, OG/Twitter 메타 태그 |
@@ -73,6 +75,7 @@ REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 REACT_APP_FIREBASE_APP_ID=your_app_id
 REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
+REACT_APP_ADMIN_KEY=your_admin_key
 ```
 
 ### 4. 로컬 실행
@@ -110,10 +113,11 @@ menu_collector/
         ├── index.js           ← React Router 설정 & DOM 렌더링
         ├── firebase.js        ← Firebase 초기화 (환경 변수에서 로드)
         ├── roomStorage.js     ← localStorage 방 목록 관리
-        ├── HomePage.js        ← 랜딩 페이지 (방 생성 + 내 투표방 목록)
-        ├── HomePage.css       ← 홈 페이지 스타일
-        ├── App.js             ← 투표 페이지 (핵심 로직 전체)
-        └── App.css            ← 투표 페이지 스타일
+        ├── themeUtils.js      ← 다크모드 테마 관리 유틸리티
+        ├── HomePage.js/css    ← 랜딩 페이지 (방 생성 + 내 투표방 목록)
+        ├── App.js/css         ← 투표 페이지 (핵심 로직 전체)
+        ├── AdminPage.js/css   ← 관리자 페이지 (서비스/업로드 on·off)
+        └── index.css          ← 글로벌 CSS + 다크모드 변수
 ```
 
 ---
@@ -138,6 +142,10 @@ menu_collector/
 | 2026-02-23 | 🔍 SEO 최적화 — sitemap, robots.txt, Google/네이버 등록 |
 | 2026-02-23 | 🔒 보안 강화 — Firestore 규칙 + 클라이언트 쿨다운 |
 | 2026-02-23 | 🔑 GitHub 연동 — API 키 .env 분리, 초기 커밋 |
+| 2026-02-23 | 🌙 다크모드 — 시스템 설정 자동 감지 + 수동 토글, 전체 UI 대응 |
+| 2026-02-23 | 📱 반응형 UI 개선 — 480px/360px 브레이크포인트 보강 |
+| 2026-02-25 | 📤 공유 팝업 — 링크 복사 + QR 코드 + 네이티브 공유 (Web Share API) |
+| 2026-02-25 | ⚙️ 관리자 페이지 — 전체 서비스 / 사진 업로드 on·off 원격 제어 |
 
 ---
 
