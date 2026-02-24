@@ -4,7 +4,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import HomePage from './HomePage';
 import App from './App';
+import AdminPage from './AdminPage';
 import reportWebVitals from './reportWebVitals';
+import { initTheme } from './themeUtils';
+
+// 렌더링 전 테마 적용 (깜빡임 방지)
+initTheme();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +18,7 @@ root.render(
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/g/:groupId" element={<App />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

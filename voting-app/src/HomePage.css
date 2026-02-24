@@ -234,7 +234,125 @@
   line-height: 1.5;
 }
 
-/* ── 반응형 ── */
+/* ── 서비스 점검 안내 ── */
+.service-maintenance {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: var(--card-shadow);
+  border: 2px solid #f59e0b;
+}
+
+.maintenance-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.service-maintenance p {
+  color: var(--text-color-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ── 다크 모드 토글 (홈 헤더) ── */
+.home-header {
+  position: relative;
+}
+
+.home-theme-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+/* ══════════════════════════════════════
+   다크 모드 오버라이드
+   ══════════════════════════════════════ */
+
+/* ── 새 투표 버튼 ── */
+[data-theme="dark"] .create-room-btn {
+  background: #1e293b;
+  color: #818cf8;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .create-room-btn:hover {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+/* ── 방 생성 폼 ── */
+[data-theme="dark"] .create-room-form {
+  background: #1e293b;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .create-room-form input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .create-room-form input::placeholder {
+  color: #475569;
+}
+
+[data-theme="dark"] .create-room-form input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+[data-theme="dark"] .create-cancel-btn {
+  background: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .create-cancel-btn:hover {
+  background: #475569;
+}
+
+/* ── 방 카드 ── */
+[data-theme="dark"] .room-card {
+  background: #1e293b;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .room-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .room-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .room-date {
+  color: #64748b;
+}
+
+[data-theme="dark"] .room-arrow {
+  color: #64748b;
+}
+
+[data-theme="dark"] .room-card:hover .room-arrow {
+  color: #818cf8;
+}
+
+[data-theme="dark"] .room-remove {
+  color: #475569;
+}
+
+[data-theme="dark"] .room-remove:hover {
+  color: #ef4444;
+}
+
+/* ══════════════════════════════════════
+   반응형 (Responsive)
+   ══════════════════════════════════════ */
+
 @media (max-width: 480px) {
   .home-app {
     padding: 24px 14px;
@@ -249,5 +367,40 @@
   .create-room-btn {
     padding: 18px;
     font-size: 1.1rem;
+  }
+
+  .room-card-body {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .room-name {
+    font-size: 0.95rem;
+  }
+}
+
+/* ── 매우 작은 화면 (320~360px) ── */
+@media (max-width: 360px) {
+  .home-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .create-room-btn {
+    padding: 16px;
+    font-size: 1rem;
+  }
+
+  .room-card-body {
+    padding: 12px 14px;
+  }
+
+  .room-name {
+    font-size: 0.9rem;
+  }
+
+  .home-theme-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
   }
 }

@@ -2,6 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ── 서비스 설정 (관리자 제어) ──
+    match /config/{configId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
     // ── 그룹 문서 ──
     match /groups/{groupId} {
       // 읽기: 누구나 가능

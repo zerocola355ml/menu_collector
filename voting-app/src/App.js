@@ -20,6 +20,8 @@ import {
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./firebase";
 import { saveRoom, removeRoom } from "./roomStorage";
+import { toggleTheme, getTheme } from "./themeUtils";
+import { QRCodeSVG } from "qrcode.react";
 import "./App.css";
 
 // Firestore 컬렉션 이름
@@ -48,8 +50,6 @@ function App() {
   const [deleting, setDeleting] = useState(null);
   const [quickJoinTarget, setQuickJoinTarget] = useState(null); // 빠른 참여 팝업 대상
   const [quickJoinName, setQuickJoinName] = useState(""); // 팝업 이름 입력
-  const [showNewGroup, setShowNewGroup] = useState(false); // 새 그룹 팝업
-  const [newGroupName, setNewGroupName] = useState(""); // 새 그룹 이름
   const carouselRef = useRef(null);
   const quickJoinInputRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -70,6 +70,30 @@ function App() {
     }, ms);
     return false;
   };
+
+  // ── 서비스 설정 (관리자 제어) ──
+  const [serviceEnabled, setServiceEnabled] = useState(true);
+  const [uploadEnabled, setUploadEnabled] = useState(true);
+  const [serviceMessage, setServiceMessage] = useState("");
+  const [uploadMessage, setUploadMessage] = useState("");
+
+  useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const snap = await getDoc(doc(db, "config", "service"));
+        if (snap.exists()) {
+          const data = snap.data();
+          setServiceEnabled(data.serviceEnabled ?? true);
+          setUploadEnabled(data.uploadEnabled ?? true);
+          setServiceMessage(data.serviceMessage || "현재 서비스 점검 중입니다.");
+          setUploadMessage(data.uploadMessage || "사진 업로드가 일시 중단되었습니다.");
+        }
+      } catch (error) {
+        // 설정 문서가 없으면 기본값(활성) 유지
+      }
+    };
+    loadConfig();
+  }, []);
 
   // ── 만료된 방 정리 (서브컬렉션 + Storage + 그룹 문서 삭제) ──
   const cleanupExpiredRoom = async (gId) => {
@@ -253,6 +277,11 @@ function App() {
   const handleVote = async (e) => {
     e.preventDefault();
 
+    if (!serviceEnabled) {
+      setMessage(serviceMessage);
+      return;
+    }
+
     const trimmedName = name.trim();
     const trimmedItem = item.trim();
 
@@ -359,6 +388,12 @@ function App() {
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
+
+    if (!uploadEnabled) {
+      setMessage(uploadMessage);
+      e.target.value = "";
+      return;
+    }
 
     // 쿨다운 체크 (5초)
     if (isCooldown("upload", 5000)) {
@@ -547,6 +582,11 @@ function App() {
 
   // ── 빠른 참여 실제 제출 ──
   const submitQuickJoin = async (voteItem, joinName) => {
+    if (!serviceEnabled) {
+      setMessage(serviceMessage);
+      return;
+    }
+
     // 쿨다운 체크 (2초)
     if (isCooldown("quickJoin", 2000)) {
       setMessage("⏳ 잠시 후 다시 시도해주세요.");
@@ -579,54 +619,53 @@ function App() {
     submitQuickJoin(quickJoinTarget, trimmed);
   };
 
-  // ── 새 그룹 생성 ──
-  const handleCreateGroup = async (e) => {
-    e.preventDefault();
-    const trimmed = newGroupName.trim();
-    if (!trimmed) return;
+  // ── 공유 팝업 ──
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const shareUrl = window.location.href;
 
-    // 쿨다운 체크 (3초)
-    if (isCooldown("createGroup", 3000)) {
-      setMessage("⏳ 잠시 후 다시 시도해주세요.");
-      return;
-    }
-
+  // 링크 복사
+  const handleCopyLink = async () => {
     try {
-      const docRef = await addDoc(collection(db, GROUPS_COLLECTION), {
-        name: trimmed,
-        createdAt: serverTimestamp(),
-        lastUsedAt: serverTimestamp(),
-      });
-      // localStorage에 저장
-      saveRoom(docRef.id, trimmed);
-      setShowNewGroup(false);
-      setNewGroupName("");
-      navigate(`/g/${docRef.id}`);
-    } catch (error) {
-      console.error("그룹 생성 중 오류:", error);
-      setMessage("그룹 생성에 실패했습니다.");
-    }
-  };
-
-  // ── 링크 공유 (URL 클립보드 복사) ──
-  const handleShareLink = async () => {
-    const url = window.location.href;
-    try {
-      await navigator.clipboard.writeText(url);
-      setMessage("📋 링크가 복사되었습니다! 친구에게 공유하세요.");
+      await navigator.clipboard.writeText(shareUrl);
+      setShowSharePopup(false);
+      setCopyToast("📋 링크가 복사되었습니다!");
+      setTimeout(() => setCopyToast(""), 2000);
     } catch {
       // 클립보드 API 실패 시 fallback
       const textArea = document.createElement("textarea");
-      textArea.value = url;
+      textArea.value = shareUrl;
       textArea.style.position = "fixed";
       textArea.style.opacity = "0";
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
-      setMessage("📋 링크가 복사되었습니다! 친구에게 공유하세요.");
+      setShowSharePopup(false);
+      setCopyToast("📋 링크가 복사되었습니다!");
+      setTimeout(() => setCopyToast(""), 2000);
     }
   };
+
+  // 네이티브 공유 (모바일)
+  const handleNativeShare = async () => {
+    try {
+      await navigator.share({
+        title: groupName ? `${groupName} - 메뉴 모아` : "메뉴 모아",
+        text: "함께 메뉴를 골라요! 🍽️",
+        url: shareUrl,
+      });
+      setShowSharePopup(false);
+    } catch (err) {
+      // 사용자가 공유 취소한 경우 무시
+      if (err.name !== "AbortError") {
+        console.error("공유 실패:", err);
+      }
+    }
+  };
+
+  // 네이티브 공유 지원 여부
+  const canNativeShare = typeof navigator.share === "function";
 
   // ── 메뉴 가격 업데이트 ──
   const handleUpdatePrice = async (voteItem, newPrice) => {
@@ -647,6 +686,13 @@ function App() {
   const [resetting, setResetting] = useState(false);
   const [showCopyPopup, setShowCopyPopup] = useState(false); // 주문 복사 팝업
   const [copyToast, setCopyToast] = useState(""); // 복사 완료 토스트
+  const [theme, setThemeState] = useState(getTheme); // 다크모드 상태
+
+  // ── 다크모드 토글 ──
+  const handleToggleTheme = () => {
+    const next = toggleTheme();
+    setThemeState(next);
+  };
 
   // ── 주문 요약 복사 ──
   const handleCopyOrder = async (includeVoters) => {
@@ -743,6 +789,13 @@ function App() {
         {/* 헤더 */}
         <header className="header">
           <div className="header-top">
+            <button
+              className="theme-toggle header-theme-toggle"
+              onClick={handleToggleTheme}
+              title="다크모드 전환"
+            >
+              {theme === "dark" ? "☀️" : "🌙"}
+            </button>
             <h1>메뉴 모아</h1>
             <button
               className="reset-btn"
@@ -765,20 +818,13 @@ function App() {
               <span className="group-badge">📌 {groupName}</span>
               <button
                 className="share-btn-small"
-                onClick={handleShareLink}
-                title="링크 공유"
+                onClick={() => {
+                  setShowSharePopup(true);
+                  setShowQR(false);
+                }}
+                title="공유하기"
               >
                 🔗
-              </button>
-              <button
-                className="add-group-small-btn"
-                onClick={() => {
-                  setShowNewGroup(true);
-                  setNewGroupName("");
-                }}
-                title="새 투표방 만들기"
-              >
-                +
               </button>
             </div>
           )}
@@ -1080,6 +1126,80 @@ function App() {
         </div>
       )}
 
+      {/* 공유 팝업 */}
+      {showSharePopup && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowSharePopup(false)}
+        >
+          <div
+            className="share-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>🔗 공유하기</h3>
+
+            {/* QR 코드 영역 */}
+            {showQR ? (
+              <div className="share-qr-area">
+                <QRCodeSVG
+                  value={shareUrl}
+                  size={200}
+                  level="M"
+                  includeMargin={true}
+                  bgColor="transparent"
+                  fgColor={theme === "dark" ? "#f1f5f9" : "#1f2937"}
+                />
+                <p className="share-qr-hint">카메라로 스캔하세요</p>
+                <button
+                  className="share-qr-back"
+                  onClick={() => setShowQR(false)}
+                >
+                  ← 돌아가기
+                </button>
+              </div>
+            ) : (
+              <>
+                <button className="share-option-btn" onClick={handleCopyLink}>
+                  <span className="share-option-icon">🔗</span>
+                  <div className="share-option-text">
+                    <strong>링크 복사</strong>
+                    <span className="share-option-desc">클립보드에 복사합니다</span>
+                  </div>
+                </button>
+
+                <button
+                  className="share-option-btn"
+                  onClick={() => setShowQR(true)}
+                >
+                  <span className="share-option-icon">⊞</span>
+                  <div className="share-option-text">
+                    <strong>QR 코드</strong>
+                    <span className="share-option-desc">옆 사람이 카메라로 스캔</span>
+                  </div>
+                </button>
+
+                {canNativeShare && (
+                  <button className="share-option-btn" onClick={handleNativeShare}>
+                    <span className="share-option-icon">↗</span>
+                    <div className="share-option-text">
+                      <strong>다른 앱으로 공유</strong>
+                      <span className="share-option-desc">카카오톡, 메시지, AirDrop 등</span>
+                    </div>
+                  </button>
+                )}
+
+                <button
+                  className="share-popup-close"
+                  onClick={() => setShowSharePopup(false)}
+                >
+                  닫기
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 주문 복사 팝업 */}
       {showCopyPopup && (
         <div
@@ -1131,41 +1251,6 @@ function App() {
       {/* 복사 완료 토스트 */}
       {copyToast && <div className="copy-toast">{copyToast}</div>}
 
-      {/* 새 그룹 생성 팝업 */}
-      {showNewGroup && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowNewGroup(false)}
-        >
-          <div
-            className="quick-join-popup"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3>새 그룹 만들기</h3>
-            <form onSubmit={handleCreateGroup}>
-              <input
-                type="text"
-                placeholder="그룹 이름 (예: ㅇㅇ팀)"
-                value={newGroupName}
-                onChange={(e) => setNewGroupName(e.target.value)}
-                autoFocus
-              />
-              <div className="quick-join-popup-actions">
-                <button type="submit" className="quick-join-popup-confirm">
-                  만들기
-                </button>
-                <button
-                  type="button"
-                  className="quick-join-popup-cancel"
-                  onClick={() => setShowNewGroup(false)}
-                >
-                  취소
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

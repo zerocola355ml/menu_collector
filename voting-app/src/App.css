@@ -932,6 +932,118 @@ body {
   color: #6b7280;
 }
 
+/* ── 공유 팝업 ── */
+.share-popup {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px 24px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.2s ease;
+}
+
+.share-popup h3 {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.share-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: #f8f9fb;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  text-align: left;
+}
+
+.share-option-btn:hover {
+  border-color: #667eea;
+  background: #f0f2ff;
+  transform: translateY(-1px);
+}
+
+.share-option-btn:active {
+  transform: translateY(0);
+}
+
+.share-option-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.share-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.share-option-text strong {
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+.share-option-desc {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.share-popup-close {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 0 4px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.share-popup-close:hover {
+  color: #6b7280;
+}
+
+/* ── QR 코드 영역 ── */
+.share-qr-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.share-qr-hint {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.share-qr-back {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: color 0.2s;
+}
+
+.share-qr-back:hover {
+  color: #764ba2;
+}
+
 /* ── 복사 완료 토스트 ── */
 .copy-toast {
   position: fixed;
@@ -986,7 +1098,288 @@ body {
   50% { opacity: 1; }
 }
 
-/* ── 반응형 ── */
+/* ── 다크 모드 토글 (헤더 내) ── */
+.header-theme-toggle {
+  position: absolute;
+  left: 0;
+}
+
+/* ══════════════════════════════════════
+   다크 모드 오버라이드
+   ══════════════════════════════════════ */
+
+[data-theme="dark"] body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%);
+}
+
+/* ── 카드 (폼, 사진, 투표현황) ── */
+[data-theme="dark"] .vote-form,
+[data-theme="dark"] .menu-photos,
+[data-theme="dark"] .results {
+  background: #1e293b;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ── 입력 필드 ── */
+[data-theme="dark"] .input-group label {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .input-group input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .input-group input::placeholder {
+  color: #475569;
+}
+
+[data-theme="dark"] .input-group input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+/* ── 메시지 (그라데이션 위) ── */
+[data-theme="dark"] .message {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── 섹션 제목 ── */
+[data-theme="dark"] .menu-photos-header h2,
+[data-theme="dark"] .results h2 {
+  color: #f1f5f9;
+}
+
+/* ── 빈 상태 텍스트 ── */
+[data-theme="dark"] .empty,
+[data-theme="dark"] .empty-photos {
+  color: #64748b;
+}
+
+/* ── 캐러셀 ── */
+[data-theme="dark"] .carousel-slide {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .carousel-arrow {
+  background: rgba(30, 41, 59, 0.92);
+  color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .carousel-arrow:hover {
+  background: #334155;
+}
+
+[data-theme="dark"] .carousel-dot {
+  background: #475569;
+}
+
+[data-theme="dark"] .carousel-dot.active {
+  background: #818cf8;
+}
+
+/* ── 투표 항목 ── */
+[data-theme="dark"] .vote-item {
+  border-color: #334155;
+}
+
+[data-theme="dark"] .vote-item:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .vote-name {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .vote-count {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .vote-percentage {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .progress-bar {
+  background: #334155;
+}
+
+/* ── 가격 행 ── */
+[data-theme="dark"] .price-row {
+  background: #0f172a;
+}
+
+[data-theme="dark"] .price-input {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .price-input::placeholder {
+  color: #475569;
+}
+
+[data-theme="dark"] .price-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.15);
+}
+
+[data-theme="dark"] .price-unit {
+  color: #94a3b8;
+}
+
+/* ── 투표자 & 삭제 ── */
+[data-theme="dark"] .voters {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .vote-item-delete,
+[data-theme="dark"] .voter-remove {
+  color: #475569;
+}
+
+[data-theme="dark"] .vote-item-delete:hover,
+[data-theme="dark"] .voter-remove:hover {
+  color: #ef4444;
+}
+
+/* ── 모달 닫기 버튼 ── */
+[data-theme="dark"] .modal-close {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .modal-close:hover {
+  background: #334155;
+}
+
+/* ── 팝업 (빠른참여 / 주문복사 / 새그룹) ── */
+[data-theme="dark"] .quick-join-popup,
+[data-theme="dark"] .copy-popup {
+  background: #1e293b;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .quick-join-popup h3,
+[data-theme="dark"] .copy-popup h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .quick-join-popup input {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .quick-join-popup input::placeholder {
+  color: #475569;
+}
+
+[data-theme="dark"] .quick-join-popup input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+[data-theme="dark"] .quick-join-popup-cancel {
+  background: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .quick-join-popup-cancel:hover {
+  background: #475569;
+}
+
+/* ── 주문 복사 옵션 ── */
+[data-theme="dark"] .copy-option-btn {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .copy-option-btn:hover {
+  background: #1a2332;
+  border-color: #818cf8;
+}
+
+[data-theme="dark"] .copy-option-text strong {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .copy-option-preview {
+  color: #64748b;
+}
+
+[data-theme="dark"] .copy-popup-close {
+  color: #64748b;
+}
+
+[data-theme="dark"] .copy-popup-close:hover {
+  color: #94a3b8;
+}
+
+/* ── 공유 팝업 (다크모드) ── */
+[data-theme="dark"] .share-popup {
+  background: #1e293b;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .share-popup h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .share-option-btn {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .share-option-btn:hover {
+  border-color: #60a5fa;
+  background: #1e293b;
+}
+
+[data-theme="dark"] .share-option-text strong {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .share-option-desc {
+  color: #64748b;
+}
+
+[data-theme="dark"] .share-popup-close {
+  color: #64748b;
+}
+
+[data-theme="dark"] .share-popup-close:hover {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .share-qr-hint {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .share-qr-back {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .share-qr-back:hover {
+  color: #93c5fd;
+}
+
+/* ── 리셋 버튼 (다크모드 보정) ── */
+[data-theme="dark"] .reset-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── 주문 복사 버튼 (다크모드) ── */
+[data-theme="dark"] .copy-order-btn {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ══════════════════════════════════════
+   반응형 (Responsive)
+   ══════════════════════════════════════ */
+
 @media (max-width: 480px) {
   .App {
     padding: 20px 12px;
@@ -1006,5 +1399,143 @@ body {
     width: 30px;
     height: 30px;
     font-size: 1.2rem;
+  }
+
+  /* ── 투표 항목 헤더 줄바꿈 대응 ── */
+  .vote-item-header {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .vote-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 120px;
+  }
+
+  .vote-percentage {
+    font-size: 0.82rem;
+    min-width: 44px;
+  }
+
+  .quick-join-btn {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
+
+  /* ── 투표 현황 헤더 ── */
+  .results-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .results-header h2 {
+    font-size: 1.2rem;
+  }
+
+  /* ── 가격 행 줄바꿈 ── */
+  .price-subtotal {
+    font-size: 0.8rem;
+  }
+
+  /* ── 그룹 배지 행 ── */
+  .group-badge {
+    font-size: 0.82rem;
+    padding: 3px 10px;
+  }
+
+  .back-btn-small,
+  .share-btn-small,
+  .add-group-small-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.9rem;
+  }
+
+  /* ── 테마 토글 & 리셋 버튼 축소 ── */
+  .theme-toggle,
+  .reset-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  /* ── 주문 복사 버튼 ── */
+  .copy-order-btn {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
+  /* ── 공유 팝업 ── */
+  .share-popup {
+    padding: 24px 18px;
+  }
+
+  .share-popup h3 {
+    font-size: 1.1rem;
+  }
+
+  .share-option-btn {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .share-option-icon {
+    font-size: 1.3rem;
+  }
+
+  .share-option-text strong {
+    font-size: 0.9rem;
+  }
+
+  .share-option-desc {
+    font-size: 0.72rem;
+  }
+}
+
+/* ── 매우 작은 화면 (320~360px) ── */
+@media (max-width: 360px) {
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .vote-form,
+  .menu-photos,
+  .results {
+    padding: 16px 12px;
+  }
+
+  .vote-item {
+    padding: 12px;
+  }
+
+  .vote-item-header {
+    gap: 4px;
+  }
+
+  .rank {
+    font-size: 0.95rem;
+    min-width: 26px;
+  }
+
+  .vote-name {
+    font-size: 0.92rem;
+    max-width: 90px;
+  }
+
+  .vote-count {
+    font-size: 0.88rem;
+  }
+
+  .carousel-arrow {
+    width: 26px;
+    height: 26px;
+    font-size: 1rem;
+  }
+
+  .group-badge {
+    font-size: 0.78rem;
+    padding: 2px 8px;
   }
 }

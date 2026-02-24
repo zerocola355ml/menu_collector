@@ -1,0 +1,286 @@
+/* ── 관리자 페이지 전체 레이아웃 ── */
+.admin-app {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.admin-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ── 헤더 ── */
+.admin-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.admin-header h1 {
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.admin-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.admin-theme-toggle {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ── 카드 ── */
+.admin-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.admin-card-danger {
+  border-color: #ef4444;
+}
+
+.admin-card-warning {
+  border-color: #f59e0b;
+}
+
+.admin-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.admin-card-info h3 {
+  font-size: 1.1rem;
+  color: var(--text-color-primary);
+  margin-bottom: 4px;
+}
+
+.admin-card-info p {
+  font-size: 0.82rem;
+  color: var(--text-color-muted);
+  margin: 0;
+}
+
+/* ── 토글 스위치 ── */
+.admin-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.admin-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.admin-toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #d1d5db;
+  border-radius: 28px;
+  transition: background 0.3s;
+}
+
+.admin-toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.admin-toggle input:checked + .admin-toggle-slider {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.admin-toggle input:checked + .admin-toggle-slider::before {
+  transform: translateX(24px);
+}
+
+/* ── 상태 표시 ── */
+.admin-status {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.status-on {
+  color: #22c55e;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.status-off {
+  color: #ef4444;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* ── 메시지 입력 영역 ── */
+.admin-message-area {
+  margin-top: 14px;
+}
+
+.admin-message-area label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-color-muted);
+  margin-bottom: 6px;
+}
+
+.admin-message-area textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: var(--text-color-primary);
+  background: var(--input-bg);
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.admin-message-area textarea:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+}
+
+/* ── 저장 버튼 ── */
+.admin-save-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+  margin-bottom: 12px;
+}
+
+.admin-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.admin-save-btn:active {
+  transform: translateY(0);
+}
+
+.admin-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── 홈 버튼 ── */
+.admin-home-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.admin-home-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+/* ── 접근 거부 화면 ── */
+.admin-denied {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.admin-denied-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.admin-denied h2 {
+  color: #fff;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.admin-denied p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+/* ── 로딩 ── */
+.admin-loading {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 60px 20px;
+  font-size: 1rem;
+}
+
+/* ── 다크모드 보정 ── */
+[data-theme="dark"] .admin-toggle input:checked + .admin-toggle-slider {
+  background: linear-gradient(135deg, #4299e1, #63b3ed);
+}
+
+[data-theme="dark"] .admin-save-btn {
+  background: linear-gradient(135deg, #4299e1, #63b3ed);
+}
+
+[data-theme="dark"] .admin-save-btn:hover {
+  box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+}
+
+/* ── 반응형 ── */
+@media (max-width: 480px) {
+  .admin-app {
+    padding: 20px 12px;
+  }
+
+  .admin-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-card {
+    padding: 18px 16px;
+  }
+
+  .admin-card-info h3 {
+    font-size: 1rem;
+  }
+}
