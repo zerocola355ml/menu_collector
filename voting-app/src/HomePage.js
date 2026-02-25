@@ -27,6 +27,13 @@ function HomePage() {
   const [serviceEnabled, setServiceEnabled] = useState(true);
   const [serviceMessage, setServiceMessage] = useState("");
 
+  // ── 피드백 (의견 보내기) ──
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackCategory, setFeedbackCategory] = useState("etc");
+  const [feedbackSending, setFeedbackSending] = useState(false);
+  const [feedbackToast, setFeedbackToast] = useState("");
+
   useEffect(() => {
     const loadConfig = async () => {
       try {
@@ -90,6 +97,33 @@ function HomePage() {
   const handleRemoveRoom = (groupId) => {
     removeRoom(groupId);
     setMyRooms(getMyRooms());
+  };
+
+  // ── 피드백 전송 ──
+  const handleSendFeedback = async () => {
+    const trimmed = feedbackText.trim();
+    if (!trimmed) return;
+
+    setFeedbackSending(true);
+    try {
+      await addDoc(collection(db, "feedback"), {
+        text: trimmed,
+        category: feedbackCategory,
+        groupId: null,
+        createdAt: serverTimestamp(),
+      });
+      setShowFeedback(false);
+      setFeedbackText("");
+      setFeedbackCategory("etc");
+      setFeedbackToast("✅ 소중한 의견 감사합니다!");
+      setTimeout(() => setFeedbackToast(""), 2500);
+    } catch (error) {
+      console.error("피드백 전송 오류:", error);
+      setFeedbackToast("❌ 전송에 실패했습니다.");
+      setTimeout(() => setFeedbackToast(""), 2500);
+    } finally {
+      setFeedbackSending(false);
+    }
   };
 
   // ── 시간 포맷 (오늘/어제/날짜) ──
@@ -217,7 +251,77 @@ function HomePage() {
         <div className="home-info">
           <p>💡 친구에게 받은 링크가 있다면 그 링크로 바로 접속하세요!</p>
         </div>
+
+        {/* 푸터 - 의견 보내기 */}
+        <div className="home-footer">
+          <button
+            className="feedback-link"
+            onClick={() => setShowFeedback(true)}
+          >
+            💬 의견 보내기
+          </button>
+        </div>
       </div>
+
+      {/* 피드백 팝업 */}
+      {showFeedback && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowFeedback(false)}
+        >
+          <div
+            className="feedback-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>💬 의견 보내기</h3>
+            <p className="feedback-desc">서비스 개선에 큰 도움이 됩니다</p>
+
+            <div className="feedback-categories">
+              {[
+                { key: "bug", label: "🐛 버그" },
+                { key: "feature", label: "💡 기능 제안" },
+                { key: "etc", label: "📝 기타" },
+              ].map((cat) => (
+                <button
+                  key={cat.key}
+                  className={`feedback-cat-btn ${feedbackCategory === cat.key ? "active" : ""}`}
+                  onClick={() => setFeedbackCategory(cat.key)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              className="feedback-textarea"
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              placeholder="의견을 자유롭게 적어주세요 (최대 500자)"
+              maxLength={500}
+              rows={4}
+              autoFocus
+            />
+            <span className="feedback-count">{feedbackText.length}/500</span>
+
+            <button
+              className="feedback-submit-btn"
+              onClick={handleSendFeedback}
+              disabled={feedbackSending || !feedbackText.trim()}
+            >
+              {feedbackSending ? "전송 중..." : "보내기"}
+            </button>
+            <button
+              className="feedback-close-btn"
+              onClick={() => setShowFeedback(false)}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 피드백 토스트 */}
+      {feedbackToast && <div className="copy-toast">{feedbackToast}</div>}
     </div>
   );
 }

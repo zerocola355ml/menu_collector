@@ -1073,21 +1073,28 @@ body {
 }
 
 /* ── 만료 시간 안내 (하단 footer) ── */
-.expiry-footer {
-  text-align: center;
+/* ── 페이지 하단 (만료 시간 + 의견 보내기) ── */
+.page-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
   padding: 16px 0 8px;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.45);
   font-weight: 500;
   letter-spacing: 0.02em;
+}
+
+.expiry-text {
+  color: rgba(255, 255, 255, 0.45);
   transition: color 0.3s;
 }
 
-.expiry-footer.expiry-warning {
+.expiry-text.expiry-warning {
   color: rgba(251, 191, 36, 0.8);
 }
 
-.expiry-footer.expiry-danger {
+.expiry-text.expiry-danger {
   color: rgba(239, 68, 68, 0.85);
   font-weight: 600;
   animation: expiry-pulse 2s ease-in-out infinite;
@@ -1096,6 +1103,150 @@ body {
 @keyframes expiry-pulse {
   0%, 100% { opacity: 0.85; }
   50% { opacity: 1; }
+}
+
+.footer-dot {
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0 8px;
+}
+
+.feedback-link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.feedback-link:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── 피드백 팝업 ── */
+.feedback-popup {
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.2s ease;
+}
+
+.feedback-popup h3 {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.feedback-desc {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.feedback-categories {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.feedback-cat-btn {
+  flex: 1;
+  padding: 8px 0;
+  background: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.feedback-cat-btn.active {
+  border-color: #667eea;
+  background: #f0f2ff;
+  color: #667eea;
+}
+
+.feedback-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  color: #1f2937;
+  background: #fff;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+  min-height: 100px;
+}
+
+.feedback-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.feedback-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.feedback-count {
+  display: block;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+.feedback-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+  margin-bottom: 8px;
+}
+
+.feedback-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+.feedback-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.feedback-close-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 0 0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.feedback-close-btn:hover {
+  color: #6b7280;
 }
 
 /* ── 다크 모드 토글 (헤더 내) ── */
@@ -1363,6 +1514,74 @@ body {
 
 [data-theme="dark"] .share-qr-back:hover {
   color: #93c5fd;
+}
+
+/* ── 피드백 (다크모드) ── */
+[data-theme="dark"] .footer-dot {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .feedback-link {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .feedback-link:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="dark"] .feedback-popup {
+  background: #1e293b;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .feedback-popup h3 {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .feedback-desc {
+  color: #64748b;
+}
+
+[data-theme="dark"] .feedback-cat-btn {
+  background: #0f172a;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .feedback-cat-btn.active {
+  border-color: #60a5fa;
+  background: #1e293b;
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .feedback-textarea {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .feedback-textarea:focus {
+  border-color: #60a5fa;
+}
+
+[data-theme="dark"] .feedback-textarea::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] .feedback-count {
+  color: #64748b;
+}
+
+[data-theme="dark"] .feedback-submit-btn {
+  background: linear-gradient(135deg, #4299e1, #63b3ed);
+}
+
+[data-theme="dark"] .feedback-close-btn {
+  color: #64748b;
+}
+
+[data-theme="dark"] .feedback-close-btn:hover {
+  color: #94a3b8;
 }
 
 /* ── 리셋 버튼 (다크모드 보정) ── */

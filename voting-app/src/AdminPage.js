@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, getDocs, deleteDoc, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase";
 import { toggleTheme, getTheme } from "./themeUtils";
 import "./AdminPage.css";
@@ -24,6 +24,10 @@ function AdminPage() {
   const [uploadEnabled, setUploadEnabled] = useState(true);
   const [serviceMessage, setServiceMessage] = useState("현재 서비스 점검 중입니다. 잠시 후 다시 시도해주세요.");
   const [uploadMessage, setUploadMessage] = useState("사진 업로드 기능이 일시 중단되었습니다.");
+
+  // ── 피드백 목록 ──
+  const [feedbackList, setFeedbackList] = useState([]);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   // ── 다크모드 토글 ──
   const handleToggleTheme = () => {
@@ -55,10 +59,37 @@ function AdminPage() {
         setServiceMessage(data.serviceMessage || "현재 서비스 점검 중입니다. 잠시 후 다시 시도해주세요.");
         setUploadMessage(data.uploadMessage || "사진 업로드 기능이 일시 중단되었습니다.");
       }
+      // 피드백 로드
+      await loadFeedback();
     } catch (error) {
       console.error("설정 로드 오류:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ── 피드백 목록 로드 ──
+  const loadFeedback = async () => {
+    setFeedbackLoading(true);
+    try {
+      const q = query(collection(db, "feedback"), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+      setFeedbackList(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    } catch (error) {
+      console.error("피드백 로드 오류:", error);
+    } finally {
+      setFeedbackLoading(false);
+    }
+  };
+
+  // ── 피드백 삭제 ──
+  const handleDeleteFeedback = async (feedbackId) => {
+    if (!window.confirm("이 피드백을 삭제하시겠습니까?")) return;
+    try {
+      await deleteDoc(doc(db, "feedback", feedbackId));
+      setFeedbackList((prev) => prev.filter((f) => f.id !== feedbackId));
+    } catch (error) {
+      console.error("피드백 삭제 오류:", error);
     }
   };
 
@@ -205,6 +236,63 @@ function AdminPage() {
         >
           {saving ? "저장 중..." : "💾 설정 저장"}
         </button>
+
+        {/* 피드백 목록 */}
+        <div className="admin-card admin-feedback-section">
+          <div className="admin-card-header">
+            <div className="admin-card-info">
+              <h3>💬 사용자 피드백</h3>
+              <p>사용자가 보낸 의견 목록입니다</p>
+            </div>
+            <button
+              className="admin-refresh-btn"
+              onClick={loadFeedback}
+              disabled={feedbackLoading}
+              title="새로고침"
+            >
+              {feedbackLoading ? "⏳" : "↻"}
+            </button>
+          </div>
+
+          {feedbackList.length === 0 ? (
+            <p className="admin-feedback-empty">
+              {feedbackLoading ? "불러오는 중..." : "아직 피드백이 없습니다"}
+            </p>
+          ) : (
+            <div className="admin-feedback-list">
+              {feedbackList.map((fb) => (
+                <div key={fb.id} className="admin-feedback-item">
+                  <div className="admin-feedback-header">
+                    <span className="admin-feedback-cat">
+                      {fb.category === "bug" ? "🐛 버그" : fb.category === "feature" ? "💡 제안" : "📝 기타"}
+                    </span>
+                    <span className="admin-feedback-date">
+                      {fb.createdAt?.toDate?.()
+                        ? fb.createdAt.toDate().toLocaleString("ko-KR", {
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : ""}
+                    </span>
+                    <button
+                      className="admin-feedback-delete"
+                      onClick={() => handleDeleteFeedback(fb.id)}
+                      title="삭제"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <p className="admin-feedback-text">{fb.text}</p>
+                  {fb.groupId && (
+                    <span className="admin-feedback-group">방: {fb.groupId.slice(0, 8)}...</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* 홈으로 */}
         <button className="admin-home-btn" onClick={() => navigate("/")}>

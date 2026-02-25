@@ -8,6 +8,16 @@ service cloud.firestore {
       allow write: if true;
     }
 
+    // ── 사용자 피드백 ──
+    match /feedback/{feedbackId} {
+      allow read: if true;
+      // 생성: 텍스트 필수, 500자 제한
+      allow create: if request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 500;
+      allow delete: if true;
+    }
+
     // ── 그룹 문서 ──
     match /groups/{groupId} {
       // 읽기: 누구나 가능

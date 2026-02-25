@@ -688,6 +688,44 @@ function App() {
   const [copyToast, setCopyToast] = useState(""); // 복사 완료 토스트
   const [theme, setThemeState] = useState(getTheme); // 다크모드 상태
 
+  // ── 피드백 (의견 보내기) ──
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackCategory, setFeedbackCategory] = useState("etc");
+  const [feedbackSending, setFeedbackSending] = useState(false);
+
+  const handleSendFeedback = async () => {
+    const trimmed = feedbackText.trim();
+    if (!trimmed) return;
+
+    if (isCooldown("feedback", 10000)) {
+      setCopyToast("⏳ 잠시 후 다시 시도해주세요.");
+      setTimeout(() => setCopyToast(""), 2000);
+      return;
+    }
+
+    setFeedbackSending(true);
+    try {
+      await addDoc(collection(db, "feedback"), {
+        text: trimmed,
+        category: feedbackCategory,
+        groupId: groupId || null,
+        createdAt: serverTimestamp(),
+      });
+      setShowFeedback(false);
+      setFeedbackText("");
+      setFeedbackCategory("etc");
+      setCopyToast("✅ 소중한 의견 감사합니다!");
+      setTimeout(() => setCopyToast(""), 2500);
+    } catch (error) {
+      console.error("피드백 전송 오류:", error);
+      setCopyToast("❌ 전송에 실패했습니다.");
+      setTimeout(() => setCopyToast(""), 2500);
+    } finally {
+      setFeedbackSending(false);
+    }
+  };
+
   // ── 다크모드 토글 ──
   const handleToggleTheme = () => {
     const next = toggleTheme();
@@ -1057,20 +1095,29 @@ function App() {
           )}
         </section>
 
-        {/* 만료 시간 안내 */}
-        {remainingTime && !expired && (
-          <div
-            className={`expiry-footer ${
-              expiresAt && expiresAt.getTime() - Date.now() <= 1 * 60 * 60 * 1000
-                ? "expiry-danger"
-                : expiresAt && expiresAt.getTime() - Date.now() <= 6 * 60 * 60 * 1000
-                ? "expiry-warning"
-                : ""
-            }`}
+        {/* 만료 시간 안내 + 의견 보내기 */}
+        <div className="page-footer">
+          {remainingTime && !expired && (
+            <span
+              className={`expiry-text ${
+                expiresAt && expiresAt.getTime() - Date.now() <= 1 * 60 * 60 * 1000
+                  ? "expiry-danger"
+                  : expiresAt && expiresAt.getTime() - Date.now() <= 6 * 60 * 60 * 1000
+                  ? "expiry-warning"
+                  : ""
+              }`}
+            >
+              ⏰ {remainingTime}
+            </span>
+          )}
+          {remainingTime && !expired && <span className="footer-dot">·</span>}
+          <button
+            className="feedback-link"
+            onClick={() => setShowFeedback(true)}
           >
-            ⏰ {remainingTime}
-          </div>
-        )}
+            💬 의견 보내기
+          </button>
+        </div>
 
       </div>
 
@@ -1241,6 +1288,63 @@ function App() {
             <button
               className="copy-popup-close"
               onClick={() => setShowCopyPopup(false)}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 피드백 팝업 */}
+      {showFeedback && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowFeedback(false)}
+        >
+          <div
+            className="feedback-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>💬 의견 보내기</h3>
+            <p className="feedback-desc">서비스 개선에 큰 도움이 됩니다</p>
+
+            <div className="feedback-categories">
+              {[
+                { key: "bug", label: "🐛 버그" },
+                { key: "feature", label: "💡 기능 제안" },
+                { key: "etc", label: "📝 기타" },
+              ].map((cat) => (
+                <button
+                  key={cat.key}
+                  className={`feedback-cat-btn ${feedbackCategory === cat.key ? "active" : ""}`}
+                  onClick={() => setFeedbackCategory(cat.key)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              className="feedback-textarea"
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              placeholder="의견을 자유롭게 적어주세요 (최대 500자)"
+              maxLength={500}
+              rows={4}
+              autoFocus
+            />
+            <span className="feedback-count">{feedbackText.length}/500</span>
+
+            <button
+              className="feedback-submit-btn"
+              onClick={handleSendFeedback}
+              disabled={feedbackSending || !feedbackText.trim()}
+            >
+              {feedbackSending ? "전송 중..." : "보내기"}
+            </button>
+            <button
+              className="feedback-close-btn"
+              onClick={() => setShowFeedback(false)}
             >
               닫기
             </button>

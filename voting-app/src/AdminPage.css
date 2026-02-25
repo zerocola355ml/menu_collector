@@ -253,6 +253,107 @@
   font-size: 1rem;
 }
 
+/* ── 새로고침 버튼 ── */
+.admin-refresh-btn {
+  width: 36px;
+  height: 36px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border-color);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.admin-refresh-btn:hover {
+  background: var(--border-color);
+}
+
+/* ── 피드백 섹션 ── */
+.admin-feedback-section {
+  margin-top: 24px;
+}
+
+.admin-feedback-empty {
+  text-align: center;
+  color: var(--text-color-muted);
+  padding: 24px 0;
+  font-size: 0.9rem;
+}
+
+.admin-feedback-list {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-feedback-item {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.admin-feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.admin-feedback-cat {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-color-muted);
+  background: var(--border-color);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.admin-feedback-date {
+  font-size: 0.75rem;
+  color: var(--text-color-muted);
+  flex: 1;
+}
+
+.admin-feedback-delete {
+  background: none;
+  border: none;
+  color: var(--text-color-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.admin-feedback-delete:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.admin-feedback-text {
+  font-size: 0.9rem;
+  color: var(--text-color-primary);
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.admin-feedback-group {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: var(--text-color-muted);
+  opacity: 0.7;
+}
+
 /* ── 다크모드 보정 ── */
 [data-theme="dark"] .admin-toggle input:checked + .admin-toggle-slider {
   background: linear-gradient(135deg, #4299e1, #63b3ed);
