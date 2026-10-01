@@ -467,7 +467,7 @@ body {
 
 .vote-item-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 10px;
 }
@@ -477,19 +477,35 @@ body {
   font-size: 1.1rem;
   color: #667eea;
   min-width: 32px;
+  line-height: 1.35;
+  flex-shrink: 0;
+  padding-top: 1px;
 }
 
 .vote-name {
   flex: 1;
+  min-width: 0;
   font-weight: 600;
   font-size: 1.05rem;
   color: #1f2937;
+  line-height: 1.4;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.vote-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 1px;
 }
 
 .vote-count {
   font-weight: 700;
   color: #374151;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .vote-percentage {
@@ -497,6 +513,7 @@ body {
   color: #6b7280;
   min-width: 52px;
   text-align: right;
+  white-space: nowrap;
 }
 
 /* ── 프로그레스 바 ── */
@@ -1620,17 +1637,22 @@ body {
     font-size: 1.2rem;
   }
 
-  /* ── 투표 항목 헤더 줄바꿈 대응 ── */
+  /* ── 투표 항목: 긴 메뉴명은 줄바꿈, 표/버튼은 다음 줄 ── */
   .vote-item-header {
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 6px 8px;
   }
 
   .vote-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 120px;
+    flex: 1 1 calc(100% - 48px);
+    font-size: 0.98rem;
+  }
+
+  .vote-item-meta {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    padding-top: 2px;
+    padding-left: 40px;
   }
 
   .vote-percentage {
@@ -1740,7 +1762,11 @@ body {
 
   .vote-name {
     font-size: 0.92rem;
-    max-width: 90px;
+  }
+
+  .vote-item-meta {
+    padding-left: 34px;
+    gap: 6px;
   }
 
   .vote-count {

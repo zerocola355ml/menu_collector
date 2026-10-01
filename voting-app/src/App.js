@@ -933,22 +933,24 @@ function App() {
                       <div className="vote-item-header">
                         <span className="rank">#{index + 1}</span>
                         <span className="vote-name">{v.name}</span>
-                        <span className="vote-count">{v.count}표</span>
-                        <span className="vote-percentage">{percentage}%</span>
-                        <button
-                          className="quick-join-btn"
-                          onClick={() => handleQuickJoin(v)}
-                          title="이 항목에 참여하기"
-                        >
-                          + 참여
-                        </button>
-                        <button
-                          className="vote-item-delete"
-                          onClick={() => handleDeleteVoteItem(v)}
-                          title="항목 삭제"
-                        >
-                          ✕
-                        </button>
+                        <div className="vote-item-meta">
+                          <span className="vote-count">{v.count}표</span>
+                          <span className="vote-percentage">{percentage}%</span>
+                          <button
+                            className="quick-join-btn"
+                            onClick={() => handleQuickJoin(v)}
+                            title="이 항목에 참여하기"
+                          >
+                            + 참여
+                          </button>
+                          <button
+                            className="vote-item-delete"
+                            onClick={() => handleDeleteVoteItem(v)}
+                            title="항목 삭제"
+                          >
+                            ✕
+                          </button>
+                        </div>
                       </div>
                       <div className="progress-bar">
                         <div
